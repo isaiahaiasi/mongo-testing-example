@@ -3,7 +3,6 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 
 async function initializeMongoServer() {
   const mongoServer = await MongoMemoryServer.create();
-
   const mongoUri = mongoServer.getUri();
 
   mongoose.connect(mongoUri);
@@ -11,7 +10,7 @@ async function initializeMongoServer() {
   mongoose.connection.on("error", e => {
     if (e.message.code === "ETIMEDOUT") {
       console.log(e);
-      mongoose.connect(mongoUri, mongooseOpts);
+      mongoose.connect(mongoUri);
     }
     console.log(e);
   });
@@ -19,13 +18,6 @@ async function initializeMongoServer() {
   mongoose.connection.once("open", () => {
     console.log(`MongoDB successfully connected to ${mongoUri}`);
   });
-
-  async function stopServer() {
-    await mongoose.connection.close();
-    await mongoServer.stop();
-  }
-
-  return stopServer;
 }
 
 module.exports = initializeMongoServer;

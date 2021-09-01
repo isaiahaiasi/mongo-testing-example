@@ -6,7 +6,6 @@ const Item = require('../models/item')
 // init app
 const app = express();
 
-
 // get all items
 app.use('/items', async (req, res, next) => {
   const items = await Item.find({});
@@ -14,7 +13,7 @@ app.use('/items', async (req, res, next) => {
 })
 
 // init db server
-const dbServerCleanupPromise = initMongoServer();
+initMongoServer();
 
 beforeAll(async () => {
   // populate db
@@ -23,12 +22,6 @@ beforeAll(async () => {
     new Item({ name: 'Item 2'}).save(),
   ])
 });
-
-afterAll(async () => {
-  // teardown db server
-  const dbServerCleanupFn = await dbServerCleanupPromise;
-  await dbServerCleanupFn();
-})
 
 // run a test to try to connect to the server
 describe("Test routes", () => {
